@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Chot so lieu bao cao</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <style type="text/css" >
+                .ui-tree-container {
+                    max-height: 400px;
+                    overflow: auto;
+                }
+
+                .col1, .col3, .col5  {
+                    width: 10%;
+                }
+
+                .col2,  .col4,  .col6 {
+                    width: 30%;
+                }
+
+                .ui-panel-content {
+                    background: #FFF !important;
+                }
+
+                .burn-option-col1 {
+                    width: 30%;
+                }
+
+                .burn-option-col2 {
+                    width: 70%;
+                }
+
+                .ui-datatable thead th {
+                    white-space:pre-wrap !important;
+                    border: 1px solid #000000 !important;
+                }
+                .ui-column-title {
+                    float: none;
+                }
+                .rotate {
+                    height: 100px;
+                    padding: 0px;
+                    width: 20px !important;
+                    font-weight: normal;
+                    vertical-align: middle;
+                    font-weight: normal !important;
+                    font-style: italic;
+                    text-align: left !important;
+
+                }
+
+                .ui-datatable tbody td {
+                    border: 1px solid #000000 !important;
+                }
+            </style>
+            <p:outputPanel id="panel_center">
+                <p:messages id="messages" autoUpdate="false" showSummary="false" showDetail="true" closable="true"/>
+                <p:panel  header="Thông tin khai báo biểu mẫu theo quý" styleClass="pnl-blue" >
+                    <center>
+                        <h:panelGrid style="width: 50%" columns="4"  columnClasses="w15,w30,w15">
+                            <p:outputLabel for="iYear" value="Chọn năm" />
+                            <p:selectOneMenu id="iYear" value="#{approvedReport_Controller.YEAR}" required="true" requiredMessage="Yêu cầu chọn năm">
+                                <f:selectItem itemValue="" itemLabel="Chọn năm" />
+                                <f:selectItem itemValue="2020" itemLabel="2020" />
+                                <f:selectItem itemValue="2021" itemLabel="2021" />
+                                <f:selectItem itemValue="2022" itemLabel="2022" />
+                                <f:selectItem itemValue="2023" itemLabel="2023" />
+                                <f:selectItem itemValue="2024" itemLabel="2024" />
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                            <p:outputLabel for="iQuata" value="Chọn quý" />
+                            <p:selectOneMenu id="iQuata" value="#{approvedReport_Controller.QUARTER}" required="true" requiredMessage="Yêu cầu chọn quý">
+                                <f:selectItem itemValue="" itemLabel="Chọn quý" />
+                                <f:selectItem itemValue="1" itemLabel="Quý 1" />
+                                <f:selectItem itemValue="2" itemLabel="Quý 2" />
+                                <f:selectItem itemValue="3" itemLabel="Quý 3" />
+                                <f:selectItem itemValue="4" itemLabel="Quý 4" />
+                            </p:selectOneMenu>
+
+                            <p:commandButton icon="ui-icon-search" styleClass="btn-margin btn-blue" value="Tra cứu"
+                                             update="panel_center"
+                                             actionListener="#{approvedReport_Controller.searchInfoReport()}"></p:commandButton>
+                            <p:commandButton icon="ui-icon-locked" styleClass="btn-margin btn-blue" value="Chốt số liệu"
+                                             update="panel_center"
+                                             rendered="#{approvedReport_Controller.displayButtonApproved}"
+                                             oncomplete="PF('confirmApproved').show()"></p:commandButton>
+                        </h:panelGrid>
+                    </center>
+                    <br></br><br></br>
+                    <p:panel rendered="#{approvedReport_Controller.displayTable}">
+                        <p:dataTable id="itblKTDV" var="data" 
+                                     value="#{approvedReport_Controller.dataSearch}"
+                                     rendered="#{approvedReport_Controller.displayTable}">
+
+                            <p:column headerText="Đơn vị">
+                                <h:outputText value="#{data.DONVI}" />
+                            </p:column>
+
+                            <p:column headerText="SL biểu mẫu phải khai">
+                                <h:outputText value="#{data.SL_BMPKB}" />
+                            </p:column>
+
+                            <p:column headerText="SL biểu mẫu đã khai">
+                                <h:outputText value="#{data.SL_BMDKB}" />
+                            </p:column>
+
+                            <p:column headerText="SL biểu mẫu chưa khai">
+                                <h:outputText value="#{data.SL_BMCKB}" />
+                            </p:column>
+                            <p:column headerText="DS biểu mẫu chưa khai">
+                                <h:outputText value="#{data.DS_BMCKB}" style="word-break:break-all !important; width: 40em;"/>
+                            </p:column>
+                            <p:column headerText="Trạng thái chốt">
+                                <h:outputText value="#{data.TT_CHOTKB eq '0' ? 'Chưa chốt số liệu':'Đã chốt số liệu' }" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:panel>
+            </p:outputPanel>
+            
+            <p:confirmDialog  widgetVar="confirmApproved" header="Thông báo" message="Bạn có chắc chắn muốn chốt số liệu các biểu mẫu" >
+                <p:commandButton id="confirmApproved" icon="ui-icon-circle-check" styleClass="btn-blue" value="Chốt số liệu" actionListener="#{approvedReport_Controller.approvedReport()}" oncomplete="PF('confirmApproved').hide()"
+                                 process="@this" update="panel_center, messages, :grow_main_dt"/>
+                <p:commandButton id="declineApproved" icon="ui-icon-circle-close" styleClass="btn-margin back" value="#{PP_SHARED.no}" onclick="PF('confirmApproved').hide()" />                    
+            </p:confirmDialog>
+            
+        </ui:composition>
+        <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();"/>
+        <p:dialog id="status_dialog" modal="true" widgetVar="statusDialog" draggable="false" closable="false" resizable="false" >
+            <p:graphicImage value="/resources/images/primefaces/gif-load.gif" />
+        </p:dialog>
+    </h:body>
+</html>
+

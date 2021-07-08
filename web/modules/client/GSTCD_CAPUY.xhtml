@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>GIÁM SÁT TCĐ - CẤP ỦY</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <style type="text/css" >
+                .ui-tree-container {
+                    max-height: 400px;
+                    overflow: auto;
+                }
+
+                .ui-panel-content {
+                    background: #FFF !important;
+                }
+
+                .burn-option-col1 {
+                    width: 30%;
+                }
+
+                .burn-option-col2 {
+                    width: 70%;
+                }
+
+                .ui-datatable thead th {
+                    white-space:pre-wrap !important;
+                    border: 1px solid #000000 !important;
+                }
+                .ui-column-title {
+                    float: none;
+                }
+                .rotate {
+                    height: 100px;
+                    padding: 0px;
+                    width: 20px !important;
+                    font-weight: normal;
+                    vertical-align: middle;
+                    font-weight: normal !important;
+                    font-style: italic;
+                    text-align: left !important;
+
+                }
+                .ui-datatable tbody td {
+                    border: 1px solid #000000 !important;
+                }
+
+                body .ui-inputtext.ng-dirty {
+                    border: 1px solid #b94a48;
+                }
+            </style>
+            <p:outputPanel id="panel_center">
+                <p:messages id="messages" autoUpdate="false" showSummary="false" showDetail="true" closable="true" />
+                <p:panel>
+                    <p:panelGrid columns="5" columnClasses="col1, col2, col3, col4, col3" style="width: 70%;">
+                        <p:outputLabel for="iYear" value="Chọn năm" />
+                        <p:selectOneMenu id="iYear" value="#{qL_DLD_Controller.YEAR}" required="true" requiredMessage="Yêu cầu chọn năm"
+                                         disabled="#{qL_DLD_Controller.displayInput}">
+                            <f:selectItem itemValue="" itemLabel="Chọn năm" />
+                            <f:selectItem itemValue="2020" itemLabel="2020" />
+                            <f:selectItem itemValue="2021" itemLabel="2021" />
+                            <f:selectItem itemValue="2022" itemLabel="2022" />
+                            <f:selectItem itemValue="2023" itemLabel="2023" />
+                            <f:selectItem itemValue="2024" itemLabel="2024" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="iQuata" value="Chọn quý" />
+                        <p:selectOneMenu id="iQuata" value="#{qL_DLD_Controller.QUARTER}" required="true" requiredMessage="Yêu cầu chọn quý"
+                                         disabled="#{qL_DLD_Controller.displayInput}">
+                            <f:selectItem itemValue="" itemLabel="Chọn quý" />
+                            <f:selectItem itemValue="1" itemLabel="Quý 1" />
+                            <f:selectItem itemValue="2" itemLabel="Quý 2" />
+                            <f:selectItem itemValue="3" itemLabel="Quý 3" />
+                            <f:selectItem itemValue="4" itemLabel="Quý 4" />
+                        </p:selectOneMenu>
+                        <h:panelGrid columns="4">
+                            <p:commandButton value="Khai báo" actionListener="#{qL_DLD_Controller.actionReport('ADD')}"
+                                             icon="ui-icon-plus"
+                                             update="panel_center, messages, :grow_main_dt, idlMessageAddInfo" 
+                                             rendered="#{not qL_DLD_Controller.checkDisplayButtonSave}">
+                            </p:commandButton>
+                            <p:commandButton icon="ui-icon-disk" value="Lưu thông tin" 
+                                             update="panel_center"
+                                             rendered="#{qL_DLD_Controller.checkDisplayButtonSave}"
+                                             actionListener="#{qL_DLD_Controller.actionReport('SAVE')}"></p:commandButton>
+                            <p:commandButton icon="ui-icon-search" styleClass="btn-margin btn-blue" value="Tra cứu"
+                                             update="panel_center"
+                                             actionListener="#{qL_DLD_Controller.actionReport('SEARCH')}"></p:commandButton>
+
+                            <p:commandButton icon="ui-icon-pencil" styleClass="btn-margin btn-blue" value="Sửa"
+                                             update="panel_center"
+                                             actionListener="#{qL_DLD_Controller.actionReport('EDIT')}"
+                                             rendered="#{qL_DLD_Controller.checkDisplayButtonEdit}"
+                                             disabled="#{qL_DLD_Controller.checkDisableButtonEdit}"></p:commandButton>
+                        </h:panelGrid>
+                    </p:panelGrid>
+
+                </p:panel>
+                <p:panel>
+                    <center>
+                        <h:outputLabel style="font-size: 20px; font-weight: bold;" rendered="#{qL_DLD_Controller.displayTableParam}">
+                             GIÁM SÁT TỔ CHỨC ĐẢNG THEO ĐIỀU 30 ĐIỀU LỆ ĐẢNG
+                        </h:outputLabel>
+                    </center>
+                    <br/>
+                    <p:dataTable id="itblKTDV" var="ktdv" value="#{qL_DLD_Controller.listParamTable}" 
+                                 editable="#{qL_DLD_Controller.editTableParam}"
+                                 editMode="cell"
+                                 rendered="#{qL_DLD_Controller.displayTableParam}">
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2" headerText="Tổ chức đảng được giám sát" style="width: 10px"/>
+                                <p:column colspan="8" headerText="Cấp giám sát"/>
+                                <p:column colspan="7" headerText="Nội dung"/>
+                                <p:column colspan="3" headerText="Kết luận"/>
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="BCHTW, BCT, Ban Bí thư" styleClass="rotate"/>
+                                <p:column headerText="CQ tham mưu của TW" styleClass="rotate"/>
+                                <p:column headerText="Tỉnh uỷ, BTV tỉnh uỷ và tương đương" styleClass="rotate"/>
+                                <p:column headerText="CQ tham mưu của cấp ủy tỉnh và tương đương" styleClass="rotate"/>
+                                <p:column headerText="Huyện ủy, BTV HU và tương đương" styleClass="rotate"/>
+                                <p:column headerText="CQ tham mưu của  cấp ủy huyện và tương đương" styleClass="rotate"/>
+                                <p:column headerText="Đảng ủy cơ sở, BTV Đảng ủy cơ sở" styleClass="rotate"/>
+                                <p:column headerText="Đảng ủy bộ phận" styleClass="rotate"/>
+
+                                <p:column headerText="Chấp hành nghị quyết, chỉ thị, quy định, kết luận của Đảng" styleClass="rotate"/>
+                                <p:column headerText="Chấp hành chính sách, pháp luật của Nhà nước" styleClass="rotate"/>
+                                <p:column headerText="Thực hiện quy chế làm việc,tập trung dân chủ, đoàn kết nội bộ" styleClass="rotate"/>
+                                <p:column headerText="Công tác cán bộ" styleClass="rotate"/>
+                                <p:column headerText="Thực hành tiết kiệm, chống lãng phí" styleClass="rotate"/>
+                                <p:column headerText="Giải quyết khiếu nại, tố cáo" styleClass="rotate"/>
+                                <p:column headerText="Khác" styleClass="rotate"/>
+
+                                <p:column headerText="Thực hiện chưa tốt" styleClass="rotate"/>
+                                <p:column headerText="Có dấu hiệu vi phạm" styleClass="rotate"/>
+                                <p:column headerText="Chuyển kiểm tra khi có dấu hiệu vi phạm " styleClass="rotate"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        0<p:column style="#{ktdv.DETAIL_ID eq 0 ? 'background-color:silver;font-weight: bold;font-size: 12px;':''}">
+                            <h:outputText value="#{ktdv.DETAIL_DES}" />
+                        </p:column>
+
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'D') eq false ? 'background-color:silver':''}" >
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'D')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.d5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipD5" value="#{ktdv.d5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'E') eq false ? 'background-color:silver':''}" >
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'E')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.e5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipE5" value="#{ktdv.e5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'F') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'F')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.f5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipF5" value="#{ktdv.f5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'G') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'G')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.g5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipG5" value="#{ktdv.g5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'H') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'H')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.h5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipH5" value="#{ktdv.h5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'I') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'I')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.i5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipI5" value="#{ktdv.i5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'J') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'J')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.j5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipJ5" value="#{ktdv.j5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'K') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'K')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.k5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipK5" value="#{ktdv.k5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'L') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'L')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.l5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipL5" value="#{ktdv.l5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'M') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'M')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.m5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipM5" value="#{ktdv.m5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'N') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'N')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.n5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipN5" value="#{ktdv.n5}" style="width:100%" disabled="false"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'O') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'O')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.o5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipO5" value="#{ktdv.o5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'P') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'P')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.p5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipP5" value="#{ktdv.p5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'Q') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'Q')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.q5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipQ5" value="#{ktdv.q5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'R') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'R')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.r5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipR5" value="#{ktdv.r5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'S') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'S')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.s5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipS5" value="#{ktdv.s5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'T') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'T')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.t5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipT5" value="#{ktdv.t5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'U') eq false ? 'background-color:silver':''}">
+                            <p:cellEditor rendered="#{qL_DLD_Controller.isCheckDisabledCell(ktdv.DETAIL_ID,'U')}">
+                                <f:facet name="output">
+                                    <h:outputText value="#{ktdv.u5}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="ipU5" value="#{ktdv.u5}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </p:outputPanel>
+
+            <p:confirmDialog message="#{qL_DLD_Controller.messageDialog}" widgetVar="dlMessageAddInfo" showEffect="fade" id="idlMessageAddInfo">
+                <center>
+                    <p:commandButton id="btn_viewl" icon="ui-icon-circle-triangle-e" styleClass="btn-margin btn-green" 
+                                     value="#{PP_SHARED.view}" 
+                                     oncomplete="PF('dlMessageAddInfo').hide()"
+                                     process="@this," update="panel_center"
+                                     actionListener="#{qL_DLD_Controller.actionReport('SEARCH')}"/>
+
+                    <p:commandButton id="btn_cancel_group_level" icon="ui-icon-close" styleClass="btn-margin back" value="#{PP_SHARED.cancel}" 
+                                     oncomplete="PF('dlMessageAddInfo').hide()">
+                    </p:commandButton>
+                </center>
+            </p:confirmDialog>
+            
+        </ui:composition>
+    </h:body>
+</html>
+

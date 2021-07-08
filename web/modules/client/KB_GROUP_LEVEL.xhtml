@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>KTDV-D30</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <style type="text/css">
+                .ddsg-wrapper li {
+                    background: none;
+                }
+
+                #form_main\:tree_module {
+                    border: 0;
+                    background: transparent;
+                }
+
+                #table_module_right {
+                    border-left: 1px solid #EEE;
+                    border-bottom: 1px solid #EEE;
+                }                
+
+                #table_module_right td, #table_module_right th {
+                    text-align: center;
+                    padding: 5px 10px;                    
+                    border-top: 1px solid #EEE;
+                    border-right: 1px solid #EEE;
+                }
+
+                #table_module_right td div {
+                    text-align: left;
+                }
+
+                #sidebar .ui-widget-content {
+                    border-color: #EEE !important;
+                }
+
+                .pnl td {
+                    text-align: left;
+                }
+
+                #table_module_right td div {
+                    text-align: center !important;
+                }
+
+                .ui-tree-container {
+                    max-height: 400px;
+                }
+
+                .ui-autocomplete .ui-inputfield {
+                    width: 100%;
+                }
+            </style>  
+            <p:outputPanel id="panel_center">
+                <p:messages id="messages" autoUpdate="false" showSummary="false" showDetail="true" closable="true"/>
+                <f:param name="action" value="delete" />
+                <div class="left" style="width: 35%;" >
+                    <p:panel header="Danh sách GroupLevel" styleClass="pnl-blue" >
+                        <p:panel>
+                            <h:panelGrid style="width: 100%" columns="2"  columnClasses="w15,w35">
+                                <p:outputLabel for="iReportList" value="Biểu mẫu" />
+                                <p:selectOneMenu id="iReportList" value="#{kB_GROUP_LEVEL_Controller.selectedReport}" disabled="#{not kB_GROUP_LEVEL_Controller.isDISABLE}">
+                                    <f:selectItem itemValue="" itemLabel="Chọn biểu mẫu" />
+                                    <f:selectItems value="#{kB_GROUP_LEVEL_Controller.listReport}" var="lReport" itemLabel="#{lReport.REPORT_NAME}" itemValue="#{lReport.REPORT_NAME}"/>
+                                    <p:ajax event="change" global="false" process="@this" update=":form_main:itblGroupLevel, :form_main:itblKTDV, :form_main:ipnlInput" 
+                                            listener="#{kB_GROUP_LEVEL_Controller.getListGroupLevel()}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel>
+                            <p:dataTable id="itblGroupLevel" var="vGroupLevel" value="#{kB_GROUP_LEVEL_Controller.groupLevel}" 
+                                         selectionMode="single"
+                                         selection="#{kB_GROUP_LEVEL_Controller.rowGroupLevelSelect}" rowKey="#{vGroupLevel.GROUP_LEVEL_ID}">
+                                <p:ajax event="rowSelect" global="false" process="@this" 
+                                        listener="#{kB_GROUP_LEVEL_Controller.searchDetailLevel()}"
+                                        update=":form_main:itblKTDV, :form_main:ipnlInput" 
+                                        />
+
+                                <p:column headerText="GroupCode">
+                                    <h:outputText value="#{vGroupLevel.GROUP_CODE}" />
+                                </p:column>
+
+                                <p:column headerText="GroupDescription">
+                                    <h:outputText value="#{vGroupLevel.GROUP_DES}" />
+                                </p:column>
+
+                                <p:column headerText="ReportName">
+                                    <h:outputText value="#{vGroupLevel.REPORT_NAME}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                        <p:panel id="idControlGroupLevel">
+                            <center>
+                                <p:commandButton id="btn_add_group_level" icon="ui-icon-circle-plus" styleClass="btn-margin" value="#{PP_SHARED.add}" 
+                                                 actionListener="#{kB_GROUP_LEVEL_Controller.changeStateAddGroupLevel()}"
+                                                 oncomplete="PF('dlAddGroupLevel').show()"
+                                                 process="@this" 
+                                                 update="ipnlInputGroupLevel"/>
+                                <p:commandButton id="btn_edit_group_level" icon="ui-icon-pencil" styleClass="btn-margin btn-yellow" value="#{PP_SHARED.edit}" 
+                                                 actionListener="#{kB_GROUP_LEVEL_Controller.changeStateEditGroupLevel()}"
+                                                 oncomplete="PF('dlAddGroupLevel').show()"
+                                                 process="@this" 
+                                                 update="ipnlInputGroupLevel"/>
+                                <p:commandButton id="btn_del_group_level" icon="ui-icon-trash" styleClass="btn-margin btn-red" value="#{PP_SHARED.del}" 
+                                                 oncomplete="PF('confirmDeleteGroupLevel').show()"   />
+
+                            </center>
+                        </p:panel>
+                    </p:panel>
+                </div>
+                <div id="module-detail" class="right" style="min-height: 371px; width: calc(65% - 10px); margin-left: 10px;">
+                    <p:panel header="Danh sách DetailLevel" styleClass="pnl-blue" >
+                        <p:panel id="ipnlInput">
+                            <h:panelGrid style="width: 100%" columns="4" id="table_module_detail" columnClasses="w15,w35,w15,w35">
+                                <p:outputLabel for="idetail_level_code" value="DetailLevelCode"  />
+                                <p:inputText id="idetail_level_code" value="#{kB_GROUP_LEVEL_Controller.ipDetailLevel.DETAIL_LEVEL_CODE}" 
+                                             disabled="#{kB_GROUP_LEVEL_Controller.isDISABLE}"/>
+
+                                <p:outputLabel for="idetail_level_description" value="DetailLevelDescription"  />
+                                <p:inputText id="idetail_level_description" value="#{kB_GROUP_LEVEL_Controller.ipDetailLevel.DETAIL_DES}" 
+                                             disabled="#{kB_GROUP_LEVEL_Controller.isDISABLE}"/>
+
+                                <p:outputLabel for="iRuleMap" value="Quyền User"  />
+                                <p:inputTextarea id="iRuleMap" value="#{kB_GROUP_LEVEL_Controller.ipDetailLevel.RULE_INFO}" 
+                                                 disabled="#{kB_GROUP_LEVEL_Controller.isDISABLE}">
+                                </p:inputTextarea>
+
+                            </h:panelGrid>  
+                        </p:panel>
+                        <p:panel id="box_control">
+                            <center>
+                                <p:outputPanel rendered="#{not kB_GROUP_LEVEL_Controller.isDisplayBtnConfirm}"> 
+                                    <p:commandButton id="btn_add" icon="ui-icon-circle-plus" styleClass="btn-margin" value="#{PP_SHARED.add}" 
+                                                     actionListener="#{kB_GROUP_LEVEL_Controller.changeStateAdd()}" process="@this" update="panel_center" />
+                                    <p:commandButton id="btn_copy" icon="ui-icon-copy" styleClass="btn-margin btn-cyan" value="#{PP_SHARED.copy}" disabled="#{not kB_GROUP_LEVEL_Controller.selectedRow}"
+                                                     actionListener="#{kB_GROUP_LEVEL_Controller.changeStateCopy()}"  process="@this" update="panel_center"/>
+                                    <p:commandButton id="btn_edit" icon="ui-icon-pencil" styleClass="btn-margin btn-yellow" value="#{PP_SHARED.edit}" disabled="#{not kB_GROUP_LEVEL_Controller.selectedRow}" 
+                                                     actionListener="#{kB_GROUP_LEVEL_Controller.changeStateEdit()}" process="@this" update="panel_center"/>
+                                    <p:commandButton id="btn_del" icon="ui-icon-trash" styleClass="btn-margin btn-red" value="#{PP_SHARED.del}" disabled="#{not kB_GROUP_LEVEL_Controller.selectedRow}" 
+                                                     actionListener="#{kB_GROUP_LEVEL_Controller.changeStateDel()}" oncomplete="PF('confirmDelete').show()" />
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{ kB_GROUP_LEVEL_Controller.isDisplayBtnConfirm}">
+                                    <p:commandButton id="btn_ok" icon="ui-icon-circle-check" styleClass="btn-margin btn-green" value="#{PP_SHARED.ok}" actionListener="#{kB_GROUP_LEVEL_Controller.handOK()}" 
+                                                     process="@this, :form_main:ipnlInput" update="panel_center, messages, :grow_main_dt" />
+                                    <p:commandButton id="btn_cancel" icon="ui-icon-circle-arrow-w" styleClass="btn-margin back" value="#{PP_SHARED.cancel}"
+                                                     actionListener="#{kB_GROUP_LEVEL_Controller.handCancel()}" process="@this" update="panel_center">
+                                        <p:resetInput target=":form_main:ipnlInput"/>
+                                    </p:commandButton>
+                                </p:outputPanel>
+
+                            </center>
+                        </p:panel>
+                        <p:panel>
+                            <p:dataTable id="itblKTDV" var="ktdv" value="#{kB_GROUP_LEVEL_Controller.dataSearch}" 
+                                         selectionMode="single"
+                                         selection="#{kB_GROUP_LEVEL_Controller.rowSelect}" rowKey="#{ktdv.DETAIL_ID}" 
+                                         disabledSelection="#{not kB_GROUP_LEVEL_Controller.isDISABLE}">
+                                <p:ajax event="rowSelect" global="false" process="@this" 
+                                        listener="#{kB_GROUP_LEVEL_Controller.onRowSelect()}"
+                                        update=":form_main:ipnlInput, :form_main:box_control" 
+                                        />
+
+                                <p:column headerText="DetailID">
+                                    <h:outputText value="#{ktdv.DETAIL_ID}" />
+                                </p:column>
+
+                                <p:column headerText="DetailLevelCode">
+                                    <h:outputText value="#{ktdv.DETAIL_LEVEL_CODE}" />
+                                </p:column>
+
+                                <p:column headerText="DetailLevelDescription">
+                                    <h:outputText value="#{ktdv.DETAIL_DES}" />
+                                </p:column>
+
+                                <p:column headerText="Quyền User">
+                                    <h:outputText value="#{ktdv.RULE_INFO}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </p:panel>
+                </div>
+                <div class="clear" />
+            </p:outputPanel>
+            <p:dialog header="Khai báo danh sách GroupLevel" widgetVar="dlAddGroupLevel" minHeight="60" width="400" showEffect="fade">
+                <p:panel id="ipnlInputGroupLevel">
+                    <h:panelGrid style="width: 100%" columns="2" columnClasses="w15,w35">
+                        <p:outputLabel for="iGroupCode" value="GroupCode"  />
+                        <p:inputText id="iGroupCode" value="#{kB_GROUP_LEVEL_Controller.ipGroupLevel.GROUP_CODE}"/>
+
+                        <p:outputLabel for="iGroupDescription" value="GroupDescription"  />
+                        <p:inputText id="iGroupDescription" value="#{kB_GROUP_LEVEL_Controller.ipGroupLevel.GROUP_DES}" />
+                    </h:panelGrid>  
+                    <p:outputPanel>
+                        <center>
+                            <p:commandButton id="btn_ok_group_level" icon="ui-icon-circle-check" styleClass="btn-margin btn-green" value="#{PP_SHARED.ok}" 
+                                             actionListener="#{kB_GROUP_LEVEL_Controller.handOKGroupLevel()}" 
+                                             oncomplete="PF('dlAddGroupLevel').hide()"
+                                             process="@this, :form_main:ipnlInputGroupLevel" update="panel_center, messages, :grow_main_dt"/>
+                            <p:commandButton id="btn_cancel_group_level" icon="ui-icon-circle-arrow-w" styleClass="btn-margin back" value="#{PP_SHARED.cancel}" 
+                                             oncomplete="PF('dlAddGroupLevel').hide()">
+                            </p:commandButton>
+                        </center>
+                    </p:outputPanel>
+                </p:panel>
+            </p:dialog>
+
+            <p:confirmDialog  widgetVar="confirmDelete" header="#{PP_SHARED.delete_dialog_header}" message="#{PP_SHARED.confirm_delete}" >
+                <p:commandButton id="confirm" icon="ui-icon-circle-check" styleClass="btn-red" value="#{PP_SHARED.del}" actionListener="#{kB_GROUP_LEVEL_Controller.handDelete()}" oncomplete="PF('confirmDelete').hide()"
+                                 process="@this" update="panel_center, messages, :grow_main_dt"/>
+                <p:commandButton id="decline" icon="ui-icon-circle-close" styleClass="btn-margin back" value="#{PP_SHARED.no}" onclick="PF('confirmDelete').hide()" />                    
+            </p:confirmDialog>
+
+            <p:confirmDialog  widgetVar="confirmDeleteGroupLevel" header="#{PP_SHARED.delete_dialog_header}" message="#{PP_SHARED.confirm_delete}" >
+                <p:commandButton id="confirmGroupLevel" icon="ui-icon-circle-check" styleClass="btn-red" value="#{PP_SHARED.del}" actionListener="#{kB_GROUP_LEVEL_Controller.handDeleteGroupLevel()}" oncomplete="PF('confirmDeleteGroupLevel').hide()"
+                                 process="@this" update="panel_center, messages, :grow_main_dt"/>
+                <p:commandButton id="declineGroupLevel" icon="ui-icon-circle-close" styleClass="btn-margin back" value="#{PP_SHARED.no}" onclick="PF('confirmDeleteGroupLevel').hide()" />                    
+            </p:confirmDialog>
+        </ui:composition>
+    </h:body>
+</html>
+

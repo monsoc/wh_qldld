@@ -1,0 +1,172 @@
+/* 
+    Document   : layout
+    Created on : Sep 27, 2012, 2:23:17 PM
+    Author     : Dao Chien
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    background: #F3F3F3;
+    padding: 0;
+}
+
+#top-menu {
+    background: #222533;
+    color: #fff;
+    padding-left: 40px;
+}
+
+#wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#wrapper #banner {
+    height: 81px;
+    width: 100%;
+    background: rgb(28, 126, 187);
+}
+
+#banner #logo {
+    height: 75px;
+    width: 300px;
+    /*background: url('../images/logo.png') no-repeat transparent;*/
+    background-position-x: 40px;
+}
+
+#top-menu .ui-widget {
+    font-family: Tahoma, sans-serif !important;
+}
+
+#top-menu .ui-corner-all {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;    
+}
+
+#logo img {
+    height: 100%;
+}
+
+#logo h1 a {
+    display: block;
+    text-indent: -9999px;
+    height: 60px;
+    padding-top: 20px;
+    /*background: url('../images/logo.png') no-repeat center;*/
+}
+
+#logo h1 {
+    padding: 0px;
+    margin: 0px;
+}
+
+#profile_info {
+    float:right;
+    margin-right: 40px;
+    font-size:12px;    
+    height:14px;
+    padding: 4px 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+#profile_info .link-logout {
+    color: rgb(246, 255, 110);
+}
+
+#profile_info .ui-icon {
+    background-image: url("../images/ui-icons_616161_256x240_black.png") !important;
+}
+
+/** Center Layout **/
+#module-name {
+    background-color: #ddd !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-bottom: 1px solid #cfcfcf !important;
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+    text-align: left;
+    width: auto;
+    margin-top: 0;
+    text-align: center;
+}
+
+#module-name a {
+    color: #333;
+    text-decoration: none;
+}
+
+#module-name h1 {
+    color: #333;
+    margin: 0;
+}
+
+#module-name h1 {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#content-main {
+    width: 100%;
+    background: none;
+    padding: 10px;
+    border: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0 auto;
+}
+
+#content-center {
+    margin: 0 auto;
+    padding: 0;
+}
+
+#dashboard {
+    width: 100%;
+    border: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+
+#dashboard .ui-breadcrumb {
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid #dfdfdf;
+    margin-bottom: 10px;
+}
+
+#dashboard .ui-menuitem-text {
+    color: #0099cc;
+    font-size: 14px;
+}
+
+#footer {
+    background: #222533;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    color: #fff;
+    padding: 10px;
+    bottom: 0;
+    left: 0;
+}
+
+
+#status_dialog .ui-dialog-titlebar {
+    display: none;
+}
+
+#status_dialog .ui-dialog-content {
+    padding: 3px !important;
+    overflow: hidden !important;
+}

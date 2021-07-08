@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Tra cuu QLDLD</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <style type="text/css" >
+                .ui-tree-container {
+                    max-height: 400px;
+                    overflow: auto;
+                }
+
+                .col1, .col3, .col5  {
+                    width: 10%;
+                }
+
+                .col2,  .col4,  .col6 {
+                    width: 30%;
+                }
+
+                .ui-panel-content {
+                    background: #FFF !important;
+                }
+
+                .burn-option-col1 {
+                    width: 30%;
+                }
+
+                .burn-option-col2 {
+                    width: 70%;
+                }
+
+                /*                .verticalText{
+                                    writing-mode : vertical-lr;
+                                    -ms-writing-mode: tb-rl;  old IE 6 and 7 
+                                    -webkit-writing-mode: vertical-rl;
+                                }*/
+
+                .ui-datatable thead th {
+                    white-space:pre-wrap !important;
+                    border: 1px solid #000000 !important;
+                }
+                .ui-column-title {
+                    float: none;
+                }
+                .rotate {
+                    height: 100px;
+                    padding: 0px;
+                    width: 20px !important;
+                    font-weight: normal;
+                    vertical-align: middle;
+                    font-weight: normal !important;
+                    font-style: italic;
+                    text-align: left !important;
+
+                }
+                .ui-datatable tbody td {
+                    border: 1px solid #000000 !important;
+                }
+
+                /*                .ui-selectonemenu {
+                                    width:200px !important;
+                                }
+                
+                                .ui-selectonemenu label {
+                                    width: auto !important;
+                                }*/
+            </style>
+            <p:outputPanel id="panel_center">
+                <p:messages id="messages" autoUpdate="false" showSummary="false" showDetail="true" closable="true"/>
+                <p:panel header="Thông tin kết xuất báo cáo" styleClass="pnl-blue" >
+                    <center>
+                        <h:panelGrid style="width: 35%" columns="3"  columnClasses="w15,w30,w15">
+                            <p:outputLabel for="iReportName" value="Báo cáo" />
+                            <p:selectOneMenu id="iReportName" value="#{sEARCH_REPORT_Controller.REPORT_NAME}" 
+                                             required="true" requiredMessage="Chọn biểu mẫu báo cáo">
+                                <f:selectItem itemValue="" itemLabel="Chọn báo cáo" />
+                                <f:selectItems value="#{sEARCH_REPORT_Controller.listReportName}" var="lReport" itemLabel="#{lReport.elementAt(0)}" itemValue="#{lReport.elementAt(0)}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel for="iYear" value="Chọn năm" />
+                            <p:selectOneMenu id="iYear" value="#{sEARCH_REPORT_Controller.YEAR}" required="true" requiredMessage="Yêu cầu chọn năm">
+                                <f:selectItem itemValue="" itemLabel="Chọn năm" />
+                                <f:selectItem itemValue="2020" itemLabel="2020" />
+                                <f:selectItem itemValue="2021" itemLabel="2021" />
+                                <f:selectItem itemValue="2022" itemLabel="2022" />
+                                <f:selectItem itemValue="2023" itemLabel="2023" />
+                                <f:selectItem itemValue="2024" itemLabel="2024" />
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel for="iQuata" value="Chọn quý" />
+                            <p:selectOneMenu id="iQuata" value="#{sEARCH_REPORT_Controller.QUARTER}" required="true" requiredMessage="Yêu cầu chọn quý">
+                                <f:selectItem itemValue="" itemLabel="Chọn quý" />
+                                <f:selectItem itemValue="1" itemLabel="Quý 1" />
+                                <f:selectItem itemValue="2" itemLabel="Quý 2" />
+                                <f:selectItem itemValue="3" itemLabel="Quý 3" />
+                                <f:selectItem itemValue="4" itemLabel="Quý 4" />
+                            </p:selectOneMenu>
+                            <p:outputLabel/>
+                            <p:outputLabel for="iGroupName" value="Đơn vị" />
+                            <p:selectOneMenu id="iGroupName" value="#{sEARCH_REPORT_Controller.GROUP_USER}" 
+                                             required="true" requiredMessage="Chọn đơn vị cần tra cứu">
+                                <f:selectItem itemValue="" itemLabel="Chọn đơn vị" />
+                                <f:selectItems value="#{sEARCH_REPORT_Controller.listGroupUser}" var="lGroup" itemLabel="#{lGroup.elementAt(1)}" itemValue="#{lGroup.elementAt(0)}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton id="btn_ok_group_level" icon="ui-icon-calculator" styleClass="btn-margin btn-green" value="EXCEL"
+                                             onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  update=":form_main" >
+                                <p:fileDownload value="#{sEARCH_REPORT_Controller.searchReport}"  />
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </center>
+                </p:panel>
+
+            </p:outputPanel>
+        </ui:composition>
+        <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();"/>
+        <p:dialog id="status_dialog" modal="true" widgetVar="statusDialog" draggable="false" closable="false" resizable="false" >
+            <p:graphicImage value="/resources/images/primefaces/gif-load.gif" />
+        </p:dialog>
+    </h:body>
+</html>
+
